@@ -1,0 +1,22 @@
+#the database djdesweb must be created previously
+
+services:
+  juavaal2:
+    restart: "no"
+    build: ./juavaal2
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./juavaal2:/usr/src/app
+    ports:
+      - ${DEVELOP_DOCKER_DJANGO_API_FORWARDED_PORT}:8000
+    env_file:
+      - .env
+      - .env.dev
+    networks:
+      - postgis_postgis
+
+networks:
+   postgis_postgis:
+      driver: bridge
+      external: true
+
