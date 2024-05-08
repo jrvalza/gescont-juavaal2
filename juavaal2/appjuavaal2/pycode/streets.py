@@ -24,7 +24,7 @@ class Streets():
 
 
 
-        #Chech geometry
+        #Check geometry
         r = checkIntersection('d.streets', geometryWKT, 25830)
         if r:
             return {'Ok':False, 'Message': 'La calle intersecta con otra', 'Data':[]}
@@ -52,6 +52,11 @@ class Streets():
         tipo = data['tipo']
         ncarril = data['ncarril']
         geometryWKT = data['geom']
+        
+        #Check geometry
+        r = checkIntersection('d.streets', geometryWKT, 25830)
+        if r:
+            return {'Ok':False, 'Message': 'La calle intersecta con otra', 'Data':[]}
         
         #Update
         query = """
