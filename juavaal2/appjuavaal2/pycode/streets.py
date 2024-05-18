@@ -30,19 +30,20 @@ class Streets():
             return {'Ok':False, 'Message': 'La calle intersecta con otra', 'Data':[]}
         
 
-        
         #Insertion
         query = """
                 INSERT INTO d.streets (nombre, tipo, ncarril, longitud, geom)
                 VALUES (%s, %s, %s, st_length(st_geometryfromtext(%s,25830)), st_geometryfromtext(%s,25830))
                 RETURNING gid"""
+        
         self.conn.cursor.execute(query, [nombre, tipo, ncarril, geometryWKT, geometryWKT])
         self.conn.conn.commit()
 
         #List of gid inserted
         gid = self.conn.cursor.fetchall()[0][0]
         return {'Ok':True, 'Message': f'Carretera insertada. gid: {gid}', 'Data':[{'gid':gid}]}
-    
+        
+            
     
     def update(self, data:dict) -> dict:
         """Update a Streets based in the gid"""
@@ -64,6 +65,7 @@ class Streets():
                 SET (nombre, tipo, ncarril, longitud, geom) = (%s, %s, %s, st_length(st_geometryfromtext(%s,25830)), st_geometryfromtext(%s,25830))
                 WHERE gid = %s
                 """
+
         self.conn.cursor.execute(query, [nombre, tipo, ncarril, geometryWKT, geometryWKT, gid])
         self.conn.conn.commit()
         
@@ -75,7 +77,7 @@ class Streets():
             return {'Ok':True, 'Message': f'Carretera actualizada. Filas afectadas : {n}', 'Data':[{'numOfRowsAffected':n}]}
         elif n > 1:
             return {'Ok':False, 'Message': f'Demasiadas carreteras actualizadas. Filas afectadas : {n}', 'Data':[{'numOfRowsAffected':n}]}
-
+        
     
     def delete(self, gid:int) -> dict:
         """Deletes a Streets based in the gid"""

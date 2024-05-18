@@ -24,6 +24,7 @@ SECRET_KEY = 'django-insecure-j6lzl^&gmjaiysav$*5xgp9n1x2w-bfoiuozo$)*z6i@f6=9*&
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", 'False').lower() in ('true', '1', 't')
+CORS_ORIGIN_ALLOW_ALL=True
 
 ALLOWED_HOSTS = ['*']
 
@@ -132,9 +133,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-LOGIN_URL = 'http://37.187.181.98/juavaal2-api/appjuavaal2/not_logged_in/'
-#LOGIN_URL = '/appjuavaal2/not_logged_in/'
-
+LOGIN_URL = '/appjuavaal2/not_logged_in/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 

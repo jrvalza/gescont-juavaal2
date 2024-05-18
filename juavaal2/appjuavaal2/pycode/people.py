@@ -25,12 +25,21 @@ class People():
                 INSERT INTO d.people (dni, nombre, apellido, profesion, ciudad)
                 VALUES (%s, %s, %s, %s, %s)
                 RETURNING dni"""
-        self.conn.cursor.execute(query, [dni, nombre, apellido, profesion, ciudad])
-        self.conn.conn.commit()
+        
+        try:
+            self.conn.cursor.execute(query, [dni, nombre, apellido, profesion, ciudad])
+            self.conn.conn.commit()
+            dni = self.conn.cursor.fetchall()[0][0]
 
-        #List of gid inserted
-        dni = self.conn.cursor.fetchall()[0][0]
-        return {'Ok':True, 'Message': f'Persona insertada. DNI: {dni}', 'Data':[{'DNI':dni}]}
+            if dni is not None:
+                return {'Ok':True, 'Message': f'Persona insertada. DNI: {dni}', 'Data':[{'DNI':dni}]}
+            
+        except Exception as e:
+            ms = str(e).split(':')[1].strip()
+            return {'Ok':False, 'Message': ms}
+
+            
+
     
     
     def update(self, data:dict) -> dict:
@@ -59,7 +68,8 @@ class People():
             return {'Ok':True, 'Message': f'Persona actualizada. Filas afectadas : {n}', 'Data':[{'numOfRowsAffected':n}]}
         elif n > 1:
             return {'Ok':False, 'Message': f'Demasiadas personas actualizadas. Filas afectadas : {n}', 'Data':[{'numOfRowsAffected':n}]}
-
+        
+    
     
     def delete(self, dni:int) -> dict:
         """Delete a People based in the dni"""
@@ -79,6 +89,7 @@ class People():
             return {'Ok':True, 'Message': f'Persona borrada. Filas afectadas : {n}', 'Data':[{'numOfRowsAffected':n}]}
         elif n > 1:
             return {'Ok':False, 'Message': f'Demasiadas personas borradas. Filas afectadas : {n}', 'Data':[{'numOfRowsAffected':n}]}
+
 
         
     def select(self, dni=None) -> dict:

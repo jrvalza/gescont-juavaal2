@@ -47,12 +47,12 @@ class Parks():
         nombre = data['nombre']
         descripcion = data['descripcion']
         geometryWKT = data['geom']
-
+        
         #Check geometry
         r = checkIntersection('d.parks', geometryWKT, 25830)
         if r:
             return {'Ok':False, 'Message': 'El parque intersecta con otro', 'Data':[]}
-
+        
         #Update
         query = """
                 UPDATE d.parks

@@ -5,7 +5,7 @@ from .pycode import connPOO
 from .pycode import people
 from .pycode import parks
 from .pycode import streets
-
+from .pycode.libs import general
 
 
 #Django imports
@@ -47,14 +47,20 @@ class ProtectedParks(LoginRequiredMixin, View):
         conn=connPOO.Conn()
         b=parks.Parks(conn)
 
-        action = request.POST['action']
         
+        #action = request.POST['action']
+        d=general.getPostFormData(request)
+        action=d['action']
         #Insert
         if action == 'insert':
             #data to insert
-            nombre = request.POST['nombre']
-            descripcion = request.POST['descripcion']
-            geometryWkt = request.POST['geomWkt']
+            #nombre = request.POST['nombre']
+            #descripcion = request.POST['descripcion']
+            #geometryWkt = request.POST['geomWkt']
+            nombre = d['nombre']
+            descripcion = d['descripcion']
+            geometryWkt = d['geomWkt']
+            
             data = {'nombre':nombre, 'descripcion':descripcion, 'geom':geometryWkt}
         
             r = b.insert(data)
@@ -63,10 +69,14 @@ class ProtectedParks(LoginRequiredMixin, View):
         #Update
         if action == 'update':
             #data to update
-            gid = request.POST['gid']
-            nombre = request.POST['nombre']
-            descripcion = request.POST['descripcion']
-            geometryWkt = request.POST['geomWkt']
+            #gid = request.POST['gid']
+            #nombre = request.POST['nombre']
+            #descripcion = request.POST['descripcion']
+            #geometryWkt = request.POST['geomWkt']
+            gid = d['gid']
+            nombre = d['nombre']
+            descripcion = d['descripcion']
+            geometryWkt = d['geomWkt']
             data = {'gid':gid, 'nombre':nombre, 'descripcion':descripcion, 'geom':geometryWkt}
         
             r = b.update(data)
@@ -74,7 +84,8 @@ class ProtectedParks(LoginRequiredMixin, View):
         
         #Delete by gid
         if action == 'delete':
-            gid=request.POST['gid']
+            #gid=request.POST['gid']
+            gid=d['gid']
             r=b.delete(gid)
             return JsonResponse(r)
 
@@ -104,15 +115,21 @@ class ProtectedStreets(LoginRequiredMixin, View):
         conn=connPOO.Conn()
         b=streets.Streets(conn)
 
-        action = request.POST['action']
+        #action = request.POST['action']
+        d=general.getPostFormData(request)
+        action=d['action']
         
         #Insert
         if action == 'insert':
             #data to insert
-            nombre = request.POST['nombre']
-            tipo = request.POST['tipo']
-            ncarril = request.POST['ncarril']
-            geometryWkt = request.POST['geomWkt']
+            #nombre = request.POST['nombre']
+            #tipo = request.POST['tipo']
+            #ncarril = request.POST['ncarril']
+            #geometryWkt = request.POST['geomWkt']
+            nombre = d['nombre']
+            tipo = d['tipo']
+            ncarril = d['ncarril']
+            geometryWkt = d['geomWkt']
             data = {'nombre':nombre, 'tipo':tipo, 'ncarril':ncarril, 'geom':geometryWkt}
         
             r = b.insert(data)
@@ -121,11 +138,16 @@ class ProtectedStreets(LoginRequiredMixin, View):
         #Update
         if action == 'update':
             #data to update
-            gid = request.POST['gid']
-            nombre = request.POST['nombre']
-            tipo = request.POST['tipo']
-            ncarril = request.POST['ncarril']
-            geometryWkt = request.POST['geomWkt']
+            #gid = request.POST['gid']
+            #nombre = request.POST['nombre']
+            #tipo = request.POST['tipo']
+            #ncarril = request.POST['ncarril']
+            #geometryWkt = request.POST['geomWkt']
+            gid = d['gid']
+            nombre = d['nombre']
+            tipo = d['tipo']
+            ncarril = d['ncarril']
+            geometryWkt = d['geomWkt']
             data = {'gid':gid, 'nombre':nombre, 'tipo':tipo, 'ncarril':ncarril, 'geom':geometryWkt}
         
             r = b.update(data)
@@ -133,11 +155,10 @@ class ProtectedStreets(LoginRequiredMixin, View):
         
         #Delete by gid
         if action == 'delete':
-            gid=request.POST['gid']
+            #gid=request.POST['gid']
+            gid=d['gid']
             r=b.delete(gid)
             return JsonResponse(r)
-
-
 
 
 
@@ -149,14 +170,14 @@ class People(View):
         #conection
         conn=connPOO.Conn()
         b=people.People(conn)
-
+        
         if request.GET.get('dni'):
             dni = request.GET['dni']
             r=b.select(dni)
         else:
             r=b.select()
         return JsonResponse(r)
-
+        
 
 class ProtectedPeople(LoginRequiredMixin, View): 
     #Insert, Update and Delete
@@ -165,16 +186,25 @@ class ProtectedPeople(LoginRequiredMixin, View):
         conn=connPOO.Conn()
         b=people.People(conn)
 
-        action = request.POST['action']
+        #action = request.POST['action']
+        d=general.getPostFormData(request)
+        action=d['action']
         
         #Insert
         if action == 'insert':
             #data to insert
-            dni = request.POST['dni']
+            """dni = request.POST['dni']
             nombre = request.POST['nombre']
             apellido = request.POST['apellido']
             profesion = request.POST['profesion']
             ciudad = request.POST['ciudad']
+            """
+            dni = d['dni']
+            nombre = d['nombre']
+            apellido = d['apellido']
+            profesion = d['profesion']
+            ciudad = d['ciudad']
+            
             data = {'dni':dni, 'nombre':nombre, 'apellido':apellido, 'profesion':profesion, 'ciudad':ciudad}
         
             r = b.insert(data)
@@ -183,11 +213,16 @@ class ProtectedPeople(LoginRequiredMixin, View):
         #Update
         if action == 'update':
             #data to update
-            dni = request.POST['dni']
-            nombre = request.POST['nombre']
-            apellido = request.POST['apellido']
-            profesion = request.POST['profesion']
-            ciudad = request.POST['ciudad']
+            #dni = request.POST['dni']
+            #nombre = request.POST['nombre']
+            #apellido = request.POST['apellido']
+            #profesion = request.POST['profesion']
+            #ciudad = request.POST['ciudad']
+            dni = d['dni']
+            nombre = d['nombre']
+            apellido = d['apellido']
+            profesion = d['profesion']
+            ciudad = d['ciudad']
             data = {'dni':dni, 'nombre':nombre, 'apellido':apellido, 'profesion':profesion, 'ciudad':ciudad}
         
             r = b.update(data)
@@ -195,7 +230,8 @@ class ProtectedPeople(LoginRequiredMixin, View):
         
         #Delete by gid
         if action == 'delete':
-            dni=request.POST['dni']
+            #dni=request.POST['dni']
+            dni=d['dni']
             r=b.delete(dni)
             return JsonResponse(r)
 
