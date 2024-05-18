@@ -25,9 +25,9 @@ SECRET_KEY = 'django-insecure-j6lzl^&gmjaiysav$*5xgp9n1x2w-bfoiuozo$)*z6i@f6=9*&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", 'False').lower() in ('true', '1', 't')
 
-CORS_ORIGIN_ALLOW_ALL=False
+CORS_ORIGIN_ALLOW_ALL=True
 
-CORS_ALLOW_CREDENTIALS=True
+#CORS_ALLOW_CREDENTIALS=True
 
 #CORS_ORIGIN_WHITELIST = [
 #    'https://vps-3206e74d.vps.ovh.net',
