@@ -28,9 +28,10 @@ DEBUG = os.getenv("DEBUG", 'False').lower() in ('true', '1', 't')
 CORS_ORIGIN_ALLOW_ALL=False
 
 CORS_ALLOW_CREDENTIALS=True
-CORS_ORIGIN_WHITELIST = [
-    'https://vps-3206e74d.vps.ovh.net',
-    ]
+
+#CORS_ORIGIN_WHITELIST = [
+#    'https://vps-3206e74d.vps.ovh.net',
+#    ]
 
 ALLOWED_HOSTS = ['*']
 
