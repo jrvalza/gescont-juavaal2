@@ -24,7 +24,7 @@ class Parks():
         #Check geometry
         r = checkIntersection('d.parks', geometryWKT, 25830)
         if r:
-            return {'Ok':False, 'Message': 'El parque intersecta con otro', 'Data':[]}
+            return {'ok':False, 'message': 'El parque intersecta con otro', 'data':[]}
     
 
         #Insertion
@@ -37,7 +37,7 @@ class Parks():
 
         #List of gid inserted
         gid = self.conn.cursor.fetchall()[0][0]
-        return {'Ok':True, 'Message': f'Parque insertado. gid: {gid}', 'Data':[{'gid':gid}]}
+        return {'ok':True, 'message': f'Parque insertado. gid: {gid}', 'data':[{'gid':gid}]}
     
     
     def update(self, data:dict) -> dict:
@@ -51,7 +51,7 @@ class Parks():
         #Check geometry
         r = checkIntersection('d.parks', geometryWKT, 25830)
         if r:
-            return {'Ok':False, 'Message': 'El parque intersecta con otro', 'Data':[]}
+            return {'ok':False, 'message': 'El parque intersecta con otro', 'data':[]}
         
         #Update
         query = """
@@ -65,11 +65,11 @@ class Parks():
         #Number of rows updated
         n = self.conn.cursor.rowcount
         if n == 0:
-            return {'Ok':False, 'Message': 'Parques actualizados: 0', 'Data':[]}
+            return {'ok':False, 'message': 'Parques actualizados: 0', 'data':[]}
         elif n==1:
-            return {'Ok':True, 'Message': f'Parque actualizado. Filas afectadas : {n}', 'Data':[{'numOfRowsAffected':n}]}
+            return {'ok':True, 'message': f'Parque actualizado. Filas afectadas : {n}', 'data':[{'numOfRowsAffected':n, 'gid':gid}]}
         elif n > 1:
-            return {'Ok':False, 'Message': f'Demasiados parques actualizados. Filas afectadas : {n}', 'Data':[{'numOfRowsAffected':n}]}
+            return {'ok':False, 'message': f'Demasiados parques actualizados. Filas afectadas : {n}', 'data':[{'numOfRowsAffected':n}]}
 
     
     def delete(self, gid:int) -> dict:
@@ -85,11 +85,11 @@ class Parks():
         #Number of rows deleted
         n = self.conn.cursor.rowcount
         if n == 0:
-            return {'Ok':False, 'Message': 'Cero parques borrados', 'Data':[]}
+            return {'ok':False, 'message': 'Cero parques borrados', 'data':[]}
         elif n == 1:
-            return {'Ok':True, 'Message': f'Parque borrado. Filas afectadas : {n}', 'Data':[{'numOfRowsAffected':n}]}
+            return {'ok':True, 'message': f'Parque borrado. Filas afectadas : {n}', 'data':[{'numOfRowsAffected':n, 'gid':gid}]}
         elif n > 1:
-            return {'Ok':False, 'Message': f'Demasiados parques borrados. Filas afectadas : {n}', 'Data':[{'numOfRowsAffected':n}]}
+            return {'ok':False, 'message': f'Demasiados parques borrados. Filas afectadas : {n}', 'data':[{'numOfRowsAffected':n}]}
 
         
 
@@ -98,7 +98,7 @@ class Parks():
         if gid:
             query = """
                     SELECT array_to_json(array_agg(registros)) FROM (
-                        SELECT gid, nombre, descripcion, st_x(geom) as xcoord, st_y(geom) as ycoord, st_asgeojson(geom) as geometry_json 
+                        SELECT gid, nombre, descripcion, st_x(geom) as xcoord, st_y(geom) as ycoord, st_asgeojson(geom) as geometry_json, st_astext(geom) as geometry_text
                         FROM d.parks
                         WHERE gid = %s) AS registros
                     """
@@ -107,16 +107,16 @@ class Parks():
             l = self.conn.cursor.fetchall()
             r = l[0][0]
             if r is None:
-                return {'Ok':False, 'Message': 'Parques seleccionados: 0', 'Data':[]}
+                return {'ok':False, 'message': 'Parques seleccionados: 0', 'data':[]}
             else:
                 n = len(r)
-                return {'Ok':True, 'Message': f'Parques seleccionados: {n}', 'Data':r} 
+                return {'ok':True, 'message': f'Parques seleccionados: {n}', 'data':r} 
         
         if gid is None:
             """Select all records as dictionary"""
             query = """
                     SELECT array_to_json(array_agg(registros)) FROM (
-                        SELECT gid, nombre, descripcion, st_x(geom) as xcoord, st_y(geom) as ycoord, st_asgeojson(geom) as geometry_json
+                        SELECT gid, nombre, descripcion, st_x(geom) as xcoord, st_y(geom) as ycoord, st_asgeojson(geom) as geometry_json, st_astext(geom) as geometry_text
                         FROM d.parks
                         ) AS registros
                     """
@@ -125,9 +125,9 @@ class Parks():
             l = self.conn.cursor.fetchall()
             r = l[0][0]
             if r is None:
-                return {'Ok':False, 'Message': 'Parques seleccionados: 0', 'Data':[]}
+                return {'ok':False, 'message': 'Parques seleccionados: 0', 'data':[]}
             else:
                 n = len(r)
-                return {'Ok':True, 'Message': f'Parques seleccionados: {n}', 'Data':r}
+                return {'ok':True, 'message': f'Parques seleccionados: {n}', 'data':r}
         
 

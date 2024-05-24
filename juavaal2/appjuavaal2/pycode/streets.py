@@ -27,7 +27,7 @@ class Streets():
         #Check geometry
         r = checkIntersection('d.streets', geometryWKT, 25830)
         if r:
-            return {'Ok':False, 'Message': 'La calle intersecta con otra', 'Data':[]}
+            return {'ok':False, 'message': 'La calle intersecta con otra', 'data':[]}
         
 
         #Insertion
@@ -41,7 +41,7 @@ class Streets():
 
         #List of gid inserted
         gid = self.conn.cursor.fetchall()[0][0]
-        return {'Ok':True, 'Message': f'Carretera insertada. gid: {gid}', 'Data':[{'gid':gid}]}
+        return {'ok':True, 'message': f'Carretera insertada. gid: {gid}', 'data':[{'gid':gid}]}
         
             
     
@@ -57,7 +57,7 @@ class Streets():
         #Check geometry
         r = checkIntersection('d.streets', geometryWKT, 25830)
         if r:
-            return {'Ok':False, 'Message': 'La calle intersecta con otra', 'Data':[]}
+            return {'ok':False, 'message': 'La calle intersecta con otra', 'data':[]}
         
         #Update
         query = """
@@ -72,11 +72,11 @@ class Streets():
         #Number of rows updated
         n = self.conn.cursor.rowcount
         if n == 0:
-            return {'Ok':False, 'Message': 'Carreteras actualizadas: 0', 'Data':[]}
+            return {'ok':False, 'message': 'Carreteras actualizadas: 0', 'data':[]}
         elif n==1:
-            return {'Ok':True, 'Message': f'Carretera actualizada. Filas afectadas : {n}', 'Data':[{'numOfRowsAffected':n}]}
+            return {'ok':True, 'message': f'Carretera actualizada. Filas afectadas : {n}', 'data':[{'numOfRowsAffected':n, 'gid':gid}]}
         elif n > 1:
-            return {'Ok':False, 'Message': f'Demasiadas carreteras actualizadas. Filas afectadas : {n}', 'Data':[{'numOfRowsAffected':n}]}
+            return {'ok':False, 'message': f'Demasiadas carreteras actualizadas. Filas afectadas : {n}', 'data':[{'numOfRowsAffected':n}]}
         
     
     def delete(self, gid:int) -> dict:
@@ -92,11 +92,11 @@ class Streets():
         #Number of rows deleted
         n = self.conn.cursor.rowcount
         if n == 0:
-            return {'Ok':False, 'Message': 'Cero carreteras borradas', 'Data':[]}
+            return {'ok':False, 'message': 'Cero carreteras borradas', 'data':[]}
         elif n == 1:
-            return {'Ok':True, 'Message': f'Carretera borrada. Filas afectadas : {n}', 'Data':[{'numOfRowsAffected':n}]}
+            return {'ok':True, 'message': f'Carretera borrada. Filas afectadas : {n}', 'data':[{'numOfRowsAffected':n, 'gid':gid}]}
         elif n > 1:
-            return {'Ok':False, 'Message': f'Demasiadas carreteras borradas. Filas afectadas : {n}', 'Data':[{'numOfRowsAffected':n}]}
+            return {'ok':False, 'message': f'Demasiadas carreteras borradas. Filas afectadas : {n}', 'data':[{'numOfRowsAffected':n}]}
         
 
     def select(self, gid=None) -> dict:
@@ -104,7 +104,7 @@ class Streets():
         if gid:
             query = """
                     SELECT array_to_json(array_agg(registros)) FROM (
-                        SELECT gid, nombre, tipo, ncarril, longitud, st_astext(geom) as geometry_text, st_asgeojson(geom) as geometry_json 
+                        SELECT gid, nombre, tipo, ncarril, longitud, st_astext(geom) as geometry_text, st_asgeojson(geom) as geometry_json, st_astext(geom) as geometry_text
                         FROM d.streets
                         WHERE gid = %s) AS registros
                     """
@@ -113,16 +113,16 @@ class Streets():
             l = self.conn.cursor.fetchall()
             r = l[0][0]
             if r is None:
-                return {'Ok':False, 'Message': 'Carreteras seleccionadas: 0', 'Data':[]}
+                return {'ok':False, 'message': 'Carreteras seleccionadas: 0', 'data':[]}
             else:
                 n = len(r)
-                return {'Ok':True, 'Message': f'Carreteras seleccionadas: {n}', 'Data':r} 
+                return {'ok':True, 'message': f'Carreteras seleccionadas: {n}', 'data':r} 
         
         if gid is None:
             """Select all records as dictionary"""
             query = """
                     SELECT array_to_json(array_agg(registros)) FROM (
-                        SELECT gid, nombre, tipo, ncarril, longitud, st_astext(geom) as geometry_text, st_asgeojson(geom) as geometry_json
+                        SELECT gid, nombre, tipo, ncarril, longitud, st_astext(geom) as geometry_text, st_asgeojson(geom) as geometry_json, st_astext(geom) as geometry_text
                         FROM d.streets
                         ) AS registros
                     """
@@ -131,9 +131,9 @@ class Streets():
             l = self.conn.cursor.fetchall()
             r = l[0][0]
             if r is None:
-                return {'Ok':False, 'Message': 'Carreteras seleccionadas: 0', 'Data':[]}
+                return {'ok':False, 'message': 'Carreteras seleccionadas: 0', 'data':[]}
             else:
                 n = len(r)
-                return {'Ok':True, 'Message': f'Carreteras seleccionadas: {n}', 'Data':r}
+                return {'ok':True, 'message': f'Carreteras seleccionadas: {n}', 'data':r}
         
 

@@ -32,11 +32,11 @@ class People():
             dni = self.conn.cursor.fetchall()[0][0]
 
             if dni is not None:
-                return {'Ok':True, 'Message': f'Persona insertada. DNI: {dni}', 'Data':[{'DNI':dni}]}
+                return {'ok':True, 'message': f'Persona insertada. DNI: {dni}', 'data':[{'DNI':dni}]}
             
         except Exception as e:
             ms = str(e).split(':')[1].strip()
-            return {'Ok':False, 'Message': ms}
+            return {'ok':False, 'message': ms}
 
             
 
@@ -63,11 +63,11 @@ class People():
         #Number of rows updated
         n = self.conn.cursor.rowcount
         if n == 0:
-            return {'Ok':False, 'Message': 'Personas actualizadas: 0', 'Data':[]}
+            return {'ok':False, 'message': 'Personas actualizadas: 0', 'data':[]}
         elif n==1:
-            return {'Ok':True, 'Message': f'Persona actualizada. Filas afectadas : {n}', 'Data':[{'numOfRowsAffected':n}]}
+            return {'ok':True, 'message': f'Persona actualizada. Filas afectadas : {n}', 'data':[{'numOfRowsAffected':n, 'DNI':dni}]}
         elif n > 1:
-            return {'Ok':False, 'Message': f'Demasiadas personas actualizadas. Filas afectadas : {n}', 'Data':[{'numOfRowsAffected':n}]}
+            return {'ok':False, 'message': f'Demasiadas personas actualizadas. Filas afectadas : {n}', 'data':[{'numOfRowsAffected':n}]}
         
     
     
@@ -84,11 +84,11 @@ class People():
         #Number of rows deleted
         n = self.conn.cursor.rowcount
         if n == 0:
-            return {'Ok':False, 'Message': 'Cero personas borradas', 'Data':[]}
+            return {'ok':False, 'message': 'Cero personas borradas', 'data':[]}
         elif n == 1:
-            return {'Ok':True, 'Message': f'Persona borrada. Filas afectadas : {n}', 'Data':[{'numOfRowsAffected':n}]}
+            return {'ok':True, 'message': f'Persona borrada. Filas afectadas : {n}', 'data':[{'numOfRowsAffected':n, 'DNI':dni}]}
         elif n > 1:
-            return {'Ok':False, 'Message': f'Demasiadas personas borradas. Filas afectadas : {n}', 'Data':[{'numOfRowsAffected':n}]}
+            return {'ok':False, 'message': f'Demasiadas personas borradas. Filas afectadas : {n}', 'data':[{'numOfRowsAffected':n}]}
 
 
         
@@ -106,10 +106,10 @@ class People():
             l = self.conn.cursor.fetchall()
             r = l[0][0]
             if r is None:
-                return {'Ok':False, 'Message': 'Personas seleccionadas: 0', 'Data':[]}
+                return {'ok':False, 'message': 'Personas seleccionadas: 0', 'data':[]}
             else:
                 n = len(r)
-                return {'Ok':True, 'Message': f'Personas seleccionadas: {n}', 'Data':r} 
+                return {'ok':True, 'message': f'Personas seleccionadas: {n}', 'data':r} 
         
         if dni is None:
             """Select all records as dictionary"""
@@ -124,9 +124,9 @@ class People():
             l = self.conn.cursor.fetchall()
             r = l[0][0]
             if r is None:
-                return {'Ok':False, 'Message': 'Personas seleccionadas: 0', 'Data':[]}
+                return {'ok':False, 'message': 'Personas seleccionadas: 0', 'data':[]}
             else:
                 n = len(r)
-                return {'Ok':True, 'Message': f'Personas seleccionadas: {n}', 'Data':r}
+                return {'ok':True, 'message': f'Personas seleccionadas: {n}', 'data':r}
         
 
