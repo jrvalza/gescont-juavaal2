@@ -142,7 +142,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-LOGIN_URL = LOGIN_URL = 'https://vps-3206e74d.vps.ovh.net/juavaal2-api/appjuavaal2/not_logged_in/'
+LOGIN_URL = 'https://vps-3206e74d.vps.ovh.net/juavaal2-api/appjuavaal2/not_logged_in/'
 #LOGIN_URL = '/appjuavaal2/not_logged_in/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
