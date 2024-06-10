@@ -94,7 +94,6 @@ class ProtectedParks(LoginRequiredMixin, View):
 
 
 class Streets(View):
-    
     #Select by gid
     def get(self, request):
         #conection
@@ -106,6 +105,21 @@ class Streets(View):
             r=b.select(gid)
         else:
             r=b.select()
+        return JsonResponse(r)
+    
+
+
+class Streets_xy(View):
+    #Select by gid
+    def get(self, request):
+        #conection
+        conn=connPOO.Conn()
+        b=streets.Streets(conn)
+
+        x = request.GET['x']
+        y = request.GET['y']
+        r=b.select_xy(x,y)
+        
         return JsonResponse(r)
 
 class ProtectedStreets(LoginRequiredMixin, View):

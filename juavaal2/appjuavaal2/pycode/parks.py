@@ -5,7 +5,7 @@ Created on 7 mar. 2024
 
 #from dbconnection import Conn 
 from .connPOO import Conn
-from .geometryChecks import checkIntersection
+from .geometryChecks import checkIntersection, checkDistance
 
 class Parks():
     conn:Conn
@@ -22,9 +22,14 @@ class Parks():
         geometryWKT = data['geom']
 
         #Check geometry
-        r = checkIntersection('d.parks', geometryWKT, 25830)
+        r = checkIntersection('d.parks', 'd.streets', geometryWKT, 25830)
         if r:
-            return {'ok':False, 'message': 'El parque intersecta con otro', 'data':[]}
+            return {'ok':False, 'message': 'El parque intersecta con otro o con una calle', 'data':[]}
+
+        
+        r = checkDistance('d.parks', 'd.streets', geometryWKT, 25830)
+        if r:
+            return {'ok':False, 'message': 'El parque esta muy cerca o demasiado lejos de otra entidad', 'data':[]}
     
 
         #Insertion

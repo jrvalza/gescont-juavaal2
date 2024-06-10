@@ -11,7 +11,8 @@ def appLogin(request):
     #django puts im every request the object ’user’,
     #which is of the class from django.contrib.auth.models.User
     #this object is used to get the user data
-    if request.user.is_authenticated:
+    #Las cookies en DJango duran un mes por defecto, pero se pueden configurar a un determinado tiempo o accion
+    if request.user.is_authenticated: #aqui saca la cookie del navegador para identificar si esta autenticado
         groups = general.getUserGroups(request.user)
         return {"ok":True,"message": "You where already authenticated", "data":[{"username": request.user.username, 'groups': groups}]}
     

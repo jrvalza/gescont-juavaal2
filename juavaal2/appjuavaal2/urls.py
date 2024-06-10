@@ -21,6 +21,8 @@ urlpatterns = [
     path('pparks/',views.ProtectedParks.as_view()),
     path('pstreets/',views.ProtectedStreets.as_view()),
     path('ppeople/',views.ProtectedPeople.as_view()),
+
+    path('streets_xy/',views.Streets_xy.as_view()),
     
     ]
 

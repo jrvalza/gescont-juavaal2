@@ -4,7 +4,7 @@ Created on 7 mar. 2024
 '''
 #from dbconnection import Conn 
 from .connPOO import Conn
-from .geometryChecks import checkIntersection
+from .geometryChecks import checkIntersection, checkDistance
 
 
 class Streets():
@@ -25,9 +25,13 @@ class Streets():
 
 
         #Check geometry
-        r = checkIntersection('d.streets', geometryWKT, 25830)
+        r = checkIntersection('d.streets', 'd.parks', geometryWKT, 25830)
         if r:
-            return {'ok':False, 'message': 'La calle intersecta con otra', 'data':[]}
+            return {'ok':False, 'message': 'La calle intersecta con otra calle o un parque', 'data':[]}
+        
+        r = checkDistance('d.streets', 'd.parks', geometryWKT, 25830)
+        if r:
+            return {'ok':False, 'message': 'La calle esta muy cerca o demasiado lejos de otra entidad', 'data':[]}
         
 
         #Insertion
@@ -58,6 +62,10 @@ class Streets():
         r = checkIntersection('d.streets', geometryWKT, 25830)
         if r:
             return {'ok':False, 'message': 'La calle intersecta con otra', 'data':[]}
+        
+        r = checkDistance('d.streets', geometryWKT, 25830)
+        if r:
+            return {'ok':False, 'message': 'La calle esta muy cerca de otra o demasiado lejos', 'data':[]}
         
         #Update
         query = """
@@ -137,3 +145,25 @@ class Streets():
                 return {'ok':True, 'message': f'Carreteras seleccionadas: {n}', 'data':r}
         
 
+
+    def select_xy(self, x, y) -> dict:
+        """select by x,y click in map as dictionary"""
+        
+        #Intersect or within 1m
+        query = """
+                SELECT array_to_json(array_agg(registros)) FROM (
+                    SELECT gid, nombre, tipo, ncarril, longitud, st_astext(geom) as geometry_text, st_asgeojson(geom) as geometry_json, st_astext(geom) as geometry_text
+                    FROM d.streets
+                    WHERE ST_Intersects(geom, ST_SetSRID(ST_Point(%s, %s),25830)) OR ST_DWithin(geom, ST_SetSRID(ST_Point(%s, %s),25830), %s))
+                    AS registros
+                """
+        self.conn.cursor.execute(query, [x,y,x,y,50])
+        
+        #Output
+        l = self.conn.cursor.fetchall()
+        r = l[0][0]
+        if r is None:
+            return {'ok':False, 'message': 'Carreteras seleccionadas: 0', 'data':[]}
+        else:
+            n = len(r)
+            return {'ok':True, 'message': f'Carreteras seleccionadas: {n}', 'data':r}
